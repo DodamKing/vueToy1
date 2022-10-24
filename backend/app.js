@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors')
+const history = require('connect-history-api-fallback')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -11,7 +12,7 @@ const apiRouter = require('./routes/api')
 
 var app = express();
 const corsOption = {
-  origin : 'http://localhost:8080',
+  origin : 'http://localhost:9003',
   credentials : true,
 }
 
@@ -23,9 +24,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(history())
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors(corsOption))
-// app.use(require('connect-history-api-fallback'))
+// app.use(cors(corsOption))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

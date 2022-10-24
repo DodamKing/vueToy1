@@ -9,6 +9,10 @@ router.get('/test', function(req, res, next) {
 	res.json({data : 'api 테스트 용'})
 });
 
+router.get('/list', (req, res) => {
+	res.json(DB.list)
+})
+
 router.post('/save', (req, res) => {
 	const name = req.body.name
 	const date = req.body.date

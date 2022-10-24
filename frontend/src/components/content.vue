@@ -15,46 +15,31 @@
         <div class="group">  
             <div class="stamp">0.5 개</div>
             <div class="mt-2">
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">이불 정리</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">신발 정리</div>
+                <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.half" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group">  
             <div class="stamp">1 개</div>
             <div class="mt-2">
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">세탁/건조</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">분리수거</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">음식물</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">쓰레기 버리기</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">은우 간식</div>
+                <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.one" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group">  
             <div class="stamp">2 개</div>
             <div class="mt-2">
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">이불 빨래</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">청소기</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">설거지</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">빨래 개기(정리)</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">은우 밥</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">은우 씻기기</div>
+                <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.two" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group">  
             <div class="stamp">3 개</div>
             <div class="mt-2">
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">냉장고 정리</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">걸레질</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">구역 정리(인증)</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">신발 빨래</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">밥 차리기</div>
+                <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.three" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group mb-5">  
             <div class="stamp">4 개</div>
             <div class="mt-2">
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">욕실 정리</div>
-                <div class="btn btn-sm btn-outline-info mt-1" @click="activeToggle($event)">계절 옷정리</div>
+                <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.four" :key="i">{{list}}</div>
             </div> 
         </div>
 
@@ -93,10 +78,19 @@
 
 <script>
 import axios from 'axios'
+import {reactive} from 'vue'
 import AlertModal from './alertModal.vue'
 
 export default {
     setup() {
+        const state = reactive({
+            list : {},
+        })
+        
+        axios.get('/api/list').then((res) => {
+            state.list = res.data
+        })
+
         async function add () {
             const name = this.input_name
             if (!name) {
@@ -141,7 +135,7 @@ export default {
             }
         }
 
-        return {add, closeModal, activeToggle}
+        return {state, add, closeModal, activeToggle}
     },
 
     data() {

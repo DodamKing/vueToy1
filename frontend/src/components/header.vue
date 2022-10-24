@@ -9,7 +9,7 @@
             <span>|</span>
             <span>이월 적립 가능</span>
         </div>
-        <h3 class="text-center mt-3">우리집</h3>
+        <h3 class="text-center mt-3" @click="$router.go({path : '/'})">우리집</h3>
     </div>
 </template>
 
