@@ -63,7 +63,7 @@
         <div class="line"></div>
         <div class="mt-3">
             <div class="d-flex flex-row-reverse mr-2 mb-3">
-                <button class="btn btn-danger" @click="modal()" :disabled="!selected">삭제하기</button>
+                <button class="btn btn-danger" @click="modal()" :disabled="selected === ''">삭제하기</button>
             </div>
             <div class="historys">
                 <div v-for="(h, i) in state.history" :key="i">
