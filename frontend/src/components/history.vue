@@ -62,16 +62,18 @@
         </div>
         <div class="line"></div>
         <div class="mt-3">
-            <div class="d-flex flex-row-reverse mr-2">
+            <div class="d-flex flex-row-reverse mr-2 mb-3">
                 <button class="btn btn-danger" @click="modal()" :disabled="!selected">삭제하기</button>
             </div>
-            <div v-for="(h, i) in state.history" :key="i">
-                <div class="row cont text-center" @click="selected = h.idx" :class="{select : selected === h.idx}">
-                    <div class="col">{{h.name}}</div>
-                    <div class="col-2">{{h.date}}</div>
-                    <div class="col">{{h.hour}}</div>
-                    <div class="col">{{h.work}}</div>
-                    <!-- <div class="flex-fill" style="font-size: 8px;">{{h.record}}</div> -->
+            <div class="historys">
+                <div v-for="(h, i) in state.history" :key="i">
+                    <div class="row cont text-center" @click="selected = h.idx" :class="{select : selected === h.idx}">
+                        <div class="col">{{h.name}}</div>
+                        <div class="col-2">{{h.date}}</div>
+                        <div class="col">{{h.hour}}</div>
+                        <div class="col">{{h.work}}</div>
+                        <!-- <div class="flex-fill" style="font-size: 8px;">{{h.record}}</div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,5 +220,10 @@ export default {
 
     .cont .col {
         padding: 0px;
+    }
+
+    .historys {
+        height: 350px;
+        overflow: auto;
     }
 </style>

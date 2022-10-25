@@ -13,6 +13,22 @@ router.get('/list', (req, res) => {
 	res.json(DB.list)
 })
 
+router.post('/list', (req, res) => {
+	const stampCnt = req.body.stampCnt
+	const list = req.body.list
+
+	if (stampCnt === 'half') {
+		DB.list.half = list
+	}
+	else if (stampCnt === 'one') DB.list.one = list
+	else if (stampCnt === 'two') DB.list.two = list
+	else if (stampCnt === 'three') DB.list.three = list
+	else if (stampCnt === 'four') DB.list.four = list
+
+	fs.writeFileSync('public/DB.json', JSON.stringify(DB))
+	res.json(DB.list)
+})
+
 router.post('/save', (req, res) => {
 	const name = req.body.name
 	const date = req.body.date

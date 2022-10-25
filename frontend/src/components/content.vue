@@ -9,35 +9,65 @@
                 </div>
             </div>
         </div>
+        <div class="black-bg" v-if="isEdit">
+            <div class="white-bg">
+                <div class="edit-list">
+                    <div v-for="(item, i) in editList" :key="i" class="form-group">
+                        <input type="text" class="form-control" :value="item">
+                    </div>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <div class="btn btn-danger ml-1" @click="closeEdit()">취소</div>
+                    <div class="btn btn-success mr-1" @click="update()">등록</div>
+                    <div class="btn btn-primary mr-auto" @click="insert()">추가</div>
+                </div>
+            </div>
+        </div>
+
         <div class="sub text-right mr-3">
             <div class="btn btn-info" @click="$router.push({path : '/history'})">조회</div>
         </div>
-        <div class="group">  
-            <div class="stamp">0.5 개</div>
+        <div class="group">
+            <div class="d-flex justify-content-between">
+                <div class="stamp btn btn-sm">0.5 개</div>
+                <div class="btn btn-sm btn-secondary" @click="edit('half')">편집</div>
+            </div>
             <div class="mt-2">
                 <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.half" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group">  
-            <div class="stamp">1 개</div>
+            <div class="d-flex justify-content-between">
+                <div class="stamp btn btn-sm">1 개</div>
+                <div class="btn btn-sm btn-secondary" @click="edit('one')">편집</div>
+            </div>
             <div class="mt-2">
                 <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.one" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group">  
-            <div class="stamp">2 개</div>
+            <div class="d-flex justify-content-between">
+                <div class="stamp btn btn-sm">2 개</div>
+                <div class="btn btn-sm btn-secondary" @click="edit('two')">편집</div>
+            </div>
             <div class="mt-2">
                 <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.two" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group">  
-            <div class="stamp">3 개</div>
+            <div class="d-flex justify-content-between">
+                <div class="stamp btn btn-sm">3 개</div>
+                <div class="btn btn-sm btn-secondary" @click="edit('three')">편집</div>
+            </div>
             <div class="mt-2">
                 <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.three" :key="i">{{list}}</div>
             </div>
         </div>
         <div class="group mb-5">  
-            <div class="stamp">4 개</div>
+            <div class="d-flex justify-content-between">
+                <div class="stamp btn btn-sm">4 개</div>
+                <div class="btn btn-sm btn-secondary" @click="edit('four')">편집</div>
+            </div>
             <div class="mt-2">
                 <div class="btn btn-sm btn-outline-info mt-1 mr-1" @click="activeToggle($event)" v-for="(list, i) in state.list.four" :key="i">{{list}}</div>
             </div> 
@@ -107,7 +137,7 @@ export default {
             const actives = document.querySelectorAll('.btn-outline-info.active')
             for (const active of actives) {
                 works.push(active.innerHTML)
-                stamps.push(parseFloat(active.parentElement.parentElement.childNodes[0].innerHTML.replace('개', '').trim()))
+                stamps.push(parseFloat(active.parentElement.parentElement.childNodes[0].childNodes[0].innerHTML.replace('개', '').trim()))
             }
             
             const res = await axios.post('/api/save', {name, date : this.input_date, hour : this.input_hour, works, stamp, stamps})
@@ -124,6 +154,11 @@ export default {
             this.alert_modal = false
             document.body.style = 'overflow:auto'
         }
+        
+        function closeEdit() {
+            this.isEdit = false
+            document.body.style = 'overflow:auto'
+        }
 
         function activeToggle(e) {
             const target = e.target.classList
@@ -135,7 +170,39 @@ export default {
             }
         }
 
-        return {state, add, closeModal, activeToggle}
+        function edit(stamp) {
+            if (stamp === 'half') {
+                this.editList = state.list.half
+            }
+            else if (stamp === 'one') this.editList = state.list.one
+            else if (stamp === 'two') this.editList = state.list.two
+            else if (stamp === 'three') this.editList = state.list.three
+            else if (stamp === 'four') this.editList = state.list.four
+            
+            this.stampCnt = stamp
+            this.isEdit = true
+            document.body.style = 'overflow:hidden'
+        }
+
+        function insert() {
+            const insert = '<div class="form-group"><input type="text" class="form-control"></div>'
+            $('.edit-list').append(insert)
+        }
+
+        async function update() {
+            const list = []
+            const lists = document.querySelectorAll('.edit-list input')
+            for (const item of lists){
+                if (item.value !== '') list.push(item.value)
+            } 
+            const res = await axios.post('/api/list', {list, stampCnt : this.stampCnt})
+            state.list = res.data
+
+            this.isEdit = false
+            document.body.style = 'overflow:auto'
+        }
+
+        return {state, add, closeModal, activeToggle, edit, closeEdit, insert, update}
     },
 
     data() {
@@ -146,6 +213,9 @@ export default {
             alert_modal : false,
             alert_title : '',
             alert_msg : '',
+            isEdit : false,
+            editList : '',
+            stampCnt : ''
         }
     },
 
