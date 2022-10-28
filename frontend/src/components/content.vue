@@ -95,8 +95,8 @@
                         <span id="userName" class="input-group-text" v-if="input_name">{{input_name}}</span>
                         <span id="userName" class="input-group-text" v-if="!input_name">Person</span>
                     </div>
-                    <input v-model="input_date" type="text" class="form-control" placeholder="날짜">
-                    <input v-model="input_hour" type="text" class="form-control" placeholder="시간">
+                    <input v-model="input_date" type="text" class="form-control">
+                    <input v-model="input_hour" type="text" class="form-control">
                 </div>
             </div>
             <div class="sub text-center mt-4">
@@ -116,7 +116,7 @@ export default {
         const state = reactive({
             list : {},
         })
-        
+
         axios.get('/api/list').then((res) => {
             state.list = res.data
         })
@@ -206,9 +206,14 @@ export default {
     },
 
     data() {
+        const now = new Date()
+        const MM = now.getMonth() + 1
+        const dd = now.getDate()
+        const hh = now.toLocaleTimeString().slice(0, -3)
+
         return {
-            input_date : '',
-            input_hour : '',
+            input_date : `${MM}.${dd}.`,
+            input_hour : hh,
             input_name : '',
             alert_modal : false,
             alert_title : '',
