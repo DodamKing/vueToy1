@@ -209,7 +209,7 @@ export default {
         const now = new Date()
         const MM = now.getMonth() + 1
         const dd = now.getDate()
-        const hh = now.toLocaleTimeString().slice(0, -3)
+        const hh = now.toLocaleTimeString().slice(0, -6) + ' ' + now.toLocaleTimeString().slice(-2)
 
         return {
             input_date : `${MM}.${dd}.`,
