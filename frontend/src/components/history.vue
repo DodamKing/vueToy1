@@ -112,7 +112,7 @@ export default {
             }
             
             const idx = 0 ? name === 's' : 1
-            if (state.stamp[idx].time < time) {
+            if (state.stamp[idx].time < parseInt(time)) {
                 document.body.style = 'overflow:hidden'
                 this.title = '가불은 안됩니다.'
                 this.msg = '시간을 다시 입력해 주세요.'
@@ -120,6 +120,7 @@ export default {
             }
 
             const res = await axios.post('/api/history/use', {name, time})
+            state.history = [...res.data.history].reverse()
             state.stamp = res.data.stamp
             this.time = ''
             this.name = ''

@@ -96,7 +96,20 @@ router.post('/history/use', (req, res) => {
 	const name = req.body.name
 	const time = req.body.time
 	const stamp = parseInt(time) * 4
+	const idx = DB.history[DB.history.length-1].idx + 1
+	const now = new Date()
 	
+	const data = {
+		idx,
+		name : name === 's' ? '서연' : '도담',
+		date : now.getMonth() + 1 + '.' + now.getDate() + '.',
+		hour : time + '시간',
+		work : '사용',
+		record : new Date().toLocaleString(),
+		stamp : stamp * (-1),
+	}
+	DB.history.push(data)
+
 	if (name === 's') {
 		DB.stamp[0].cnt -= stamp
 		DB.stamp[0].time -= time
@@ -108,7 +121,7 @@ router.post('/history/use', (req, res) => {
 
 	fs.writeFileSync('public/DB.json', JSON.stringify(DB))
 
-	res.json({stamp : DB.stamp})
+	res.json(DB)
 })
 
 module.exports = router;
