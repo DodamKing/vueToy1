@@ -27,12 +27,12 @@
             <div class="row">
                 <div class="col">서연</div>
                 <div class="col">{{state.stamp[0].cnt}} 개</div>
-                <div class="col">{{state.stamp[0].time}} 시간</div>
+                <div class="col">{{Math.floor(state.stamp[0].time)}} 시간</div>
             </div>
             <div class="row">
                 <div class="col">도담</div>
                 <div class="col">{{state.stamp[1].cnt}} 개</div>
-                <div class="col">{{state.stamp[1].time}} 시간</div>
+                <div class="col">{{Math.floor(state.stamp[1].time)}} 시간</div>
             </div>
         </div>
         <div class="text-center mb-3 mt-3">
@@ -69,8 +69,10 @@
                 <div v-for="(h, i) in state.history" :key="i">
                     <div class="row cont text-center" @click="selected = h.idx" :class="{select : selected === h.idx}">
                         <div class="col">{{h.name}}</div>
-                        <div class="col-2">{{h.date}}</div>
-                        <div class="col">{{h.hour}}</div>
+                        <div class="col-2" v-if="h.work === '사용'">{{h.date}}</div>
+                        <div class="col-2" v-if="h.work !== '사용'">{{h.date | MMdd}}</div>
+                        <div class="col" v-if="h.work === '사용'">{{h.hour}}</div>
+                        <div class="col" v-if="h.work !== '사용'">{{h.hour | convert}}</div>
                         <div class="col">{{h.work}}</div>
                         <!-- <div class="flex-fill" style="font-size: 8px;">{{h.record}}</div> -->
                     </div>
@@ -164,6 +166,24 @@ export default {
             name : '',
             time : '',
             title : '',
+        }
+    },
+
+    filters : {
+        MMdd : (value) => {
+            if (!value.includes('-')) return value
+            return value.substring(5).replace('-', '.') + '.'
+        },
+
+        convert : (value) => {
+            if (value[0] === '오') return value
+            const getTime = value.substring(0, 2)
+            const intTime = parseInt(getTime)
+            const str = intTime < 12 ? '오전' : '오후'
+            const cvTime = intTime === 12 ? intTime : intTime % 12
+            const res = `${str} ${cvTime}${value.slice(-3)}`
+            console.log(value);
+            return res
         }
     }
 }

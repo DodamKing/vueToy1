@@ -92,11 +92,15 @@
             <div class="mt-3">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span id="userName" class="input-group-text" v-if="input_name">{{input_name}}</span>
-                        <span id="userName" class="input-group-text" v-if="!input_name">Person</span>
+                        <span id="userName" class="input-group-text">날짜</span>
                     </div>
-                    <input v-model="input_date" type="text" class="form-control">
-                    <input v-model="input_hour" type="text" class="form-control">
+                    <input v-model="input_date" type="date" :max=input_date class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span id="userName" class="input-group-text">시간</span>
+                    </div>
+                    <input v-model="input_hour" type="time" class="form-control">
                 </div>
             </div>
             <div class="sub text-center mt-4">
@@ -202,18 +206,21 @@ export default {
             document.body.style = 'overflow:auto'
         }
 
-        return {state, add, closeModal, activeToggle, edit, closeEdit, insert, update}
+        return {state, add, closeModal, activeToggle, edit, closeEdit, insert, update,}
     },
 
     data() {
         const now = new Date()
+        const YY = now.getFullYear()
         const MM = now.getMonth() + 1
         const dd = now.getDate()
-        const hh = now.toLocaleTimeString().slice(0, -6) + ' ' + now.toLocaleTimeString().slice(-2)
+        const hh = now.getHours()
+        const mm = now.getMinutes()
+        const now_hour = parseInt(mm) < 10 ? `${hh}:0${mm}` : `${hh}:${mm}`
 
         return {
-            input_date : `${MM}.${dd}.`,
-            input_hour : hh,
+            input_date : `${YY}-${MM}-${dd}`,
+            input_hour : now_hour,
             input_name : '',
             alert_modal : false,
             alert_title : '',
