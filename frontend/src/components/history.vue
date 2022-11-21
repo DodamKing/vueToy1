@@ -176,13 +176,12 @@ export default {
         },
 
         convert : (value) => {
-            if (value[0] === '오') return value
+            if (value[0] === '오' || value[value.length-1] === 'M' || value === '') return value
             const getTime = value.substring(0, 2)
             const intTime = parseInt(getTime)
             const str = intTime < 12 ? '오전' : '오후'
             const cvTime = intTime === 12 ? intTime : intTime % 12
             const res = `${str} ${cvTime}${value.slice(-3)}`
-            console.log(value);
             return res
         }
     }
