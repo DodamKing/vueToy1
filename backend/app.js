@@ -22,31 +22,34 @@ const corsOption = {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(helmet())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(history())
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(helmet())
 // app.use(cors(corsOption))
 
-// app.use((req, res) => {
-//   request('https://api.ip.pe.kr/json/', function(error, response, body){
-//     if(error){
-//       console.log(error);
-//       return;
-//     }
-//     if(!error && response.statusCode==200){
-//       //let ip = JSON.parse(body).ip;
-//       let country_code = JSON.parse(body).country_code;
-//       if(country_code != 'KR'){
-//         res.send("Access Denied");
-//         return;
-//       }
-//     }
-//   })
-// })
+app.use((req, res, next) => {
+  request('https://api.ip.pe.kr/json/', function(error, response, body){
+    if(error){
+      console.log(error);
+      return;
+    }
+    if(!error && response.statusCode==200){
+      let ip = JSON.parse(body).ip;
+      let country_code = JSON.parse(body).country_code;
+      if(country_code !== 'KR'){
+        console.log('접속 시도 지역:', JSON.parse(body).country_name.ko)
+        console.log('접속 시도 ip:', ip)
+        res.send("Access Denied")
+        return;
+      }
+    }
+    next()
+  })
+})
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
