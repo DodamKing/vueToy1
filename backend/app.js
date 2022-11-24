@@ -38,11 +38,11 @@ app.use((req, res, next) => {
       return;
     }
     if(!error && response.statusCode==200){
-      let ip = JSON.parse(body).ip;
-      let country_code = JSON.parse(body).country_code;
+      const ip = JSON.parse(body).ip
+      console.log('접속 시도 지역:', JSON.parse(body).country_name.ko)
+      console.log('접속 시도 ip:', ip)
+      const country_code = JSON.parse(body).country_code;
       if(country_code !== 'KR'){
-        console.log('접속 시도 지역:', JSON.parse(body).country_name.ko)
-        console.log('접속 시도 ip:', ip)
         res.send("Access Denied")
         return;
       }
