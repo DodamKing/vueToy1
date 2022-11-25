@@ -38,15 +38,7 @@ app.use((req, res, next) => {
   const clientIp = requestIp.getClientIp(req)
   const testIp = "207.97.227.239"
   const client = geoip.lookup(clientIp)
-
-  if (client) {
-    console.log('접속 시도 도시:', client.city)
-    console.log('접속 시도 ip:', clientIp)
-  
-    if (client.country !== 'KR') {
-      return app.use(ipfilter(clientIp))
-    }
-  }
+  if (client && client.country !== 'KR') return console.log('접속 시도:', client.city, clientIp)
   next()
 })
 
