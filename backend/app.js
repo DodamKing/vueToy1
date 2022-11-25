@@ -9,6 +9,7 @@ const helmet = require('helmet')
 const request = require('request')
 const geoip = require('geoip-lite')
 const requestIp = require('request-ip')
+const ipfilter = require('express-ipfilter').IpFilter
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -34,35 +35,18 @@ app.use(helmet())
 // app.use(cors(corsOption))
 
 app.use((req, res, next) => {
-  console.log(requestIp.getClientIp(req).substring(7))
-  console.log(geoip.lookup("207.97.227.239"))
-  // const ip = JSON.parse(body).ip
-  // console.log('접속 시도 지역:', JSON.parse(body).country_name.ko)
-  // console.log('접속 시도 ip:', ip)
-  // const country_code = JSON.parse(body).country_code;
-  // if(country_code !== 'KR'){
-  //   res.send("Access Denied")
-  //   return;
-  // }
+  const clientIp = requestIp.getClientIp(req)
+  const testIp = "207.97.227.239"
+  const client = geoip.lookup(clientIp)
 
-  // request('https://api.ip.pe.kr/json/', req.ip, function(error, response, body){
-  //   if(error){
-  //     console.log(error);
-  //     return;
-  //   }
-  //   if(!error && response.statusCode==200){
-  //     console.log(body);
-  //     const ip = JSON.parse(body).ip
-  //     console.log('접속 시도 지역:', JSON.parse(body).country_name.ko)
-  //     console.log('접속 시도 ip:', ip)
-  //     const country_code = JSON.parse(body).country_code;
-  //     if(country_code !== 'KR'){
-  //       res.send("Access Denied")
-  //       return;
-  //     }
-  //   }
-  //   next()
-  // })
+  if (client) {
+    console.log('접속 시도 도시:', client.city)
+    console.log('접속 시도 ip:', clientIp)
+  
+    if (client.country !== 'KR') {
+      return app.use(ipfilter(clientIp))
+    }
+  }
   next()
 })
 

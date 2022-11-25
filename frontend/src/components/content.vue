@@ -214,9 +214,9 @@ export default {
         const YY = now.getFullYear()
         const MM = now.getMonth() + 1
         const dd = now.getDate()
-        const hh = now.getHours()
-        const mm = now.getMinutes()
-        const now_hour = parseInt(mm) < 10 ? `${hh}:0${mm}` : `${hh}:${mm}`
+        const hh = ('0' + now.getHours()).slice(-2)
+        const mm = ('0' + now.getMinutes()).slice(-2)
+        const now_hour = hh + ':' + mm
 
         return {
             input_date : `${YY}-${MM}-${dd}`,
