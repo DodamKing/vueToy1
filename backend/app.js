@@ -25,23 +25,27 @@ const corsOption = {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// app.use(helmet({ contentSecurityPolicy: false }))
 app.use(logger(':remote-addr :method :url :status :res[content-length] - :response-time ms'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(history())
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(helmet())
 // app.use(cors(corsOption))
 
 app.use((req, res, next) => {
   const clientIp = requestIp.getClientIp(req)
   const testIp = "207.97.227.239"
   const client = geoip.lookup(clientIp)
-  if (client && client.country !== 'KR') return console.log('접속 시도:', client.city, clientIp)
+  if (client && client.country !== 'KR') {
+    console.log('접속 시도:', client.city, clientIp)
+    return res.send('Access Denied')
+  }
   next()
 })
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(helmet())
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRouter)
