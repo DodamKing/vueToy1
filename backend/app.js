@@ -10,6 +10,7 @@ const request = require('request')
 const geoip = require('geoip-lite')
 const requestIp = require('request-ip')
 const ipfilter = require('express-ipfilter').IpFilter
+const cron = require('node-cron')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -66,5 +67,39 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// cron.schedule('* 0 * * * *', async () => {
+//   const DB = require('./public/DB.json')
+//   const historys = [...DB.history].reverse()
+//   const today = new Date().getDate()
+
+//   // `https://kauth.kakao.com/oauth/authorize?client_id=c10c0fad164ec38942a565862e56418e&redirect_uri=http://localhost:9022&response_type=code&scope=talk_message`
+
+//   for await (const history of historys) {
+//     if (history.name === '도담') {
+//       const last = new Date(history.date).getDate()
+//       if (last !== today) {
+//         const authURL = 'https://kauth.kakao.com/oauth/token'
+//         const authOptions = {
+//           uri : authURL,
+//           method : 'POST',
+//           multipart : {'Content-Type' : 'application/x-www-form-urlencoded;charset=UTF-8'},
+//           body : {
+//             'code' : 'eVPsjOuHCdzW8LxHpt0EmrSjSomByYsnu7CW9LU9JXwzgq9lCTdtMerkzONvXi-CpHkF5AopyNgAAAGEx_IKrA',
+//             'grant_type' : 'authorization_code',
+//             'clitent_id' : 'c10c0fad164ec38942a565862e56418e',
+//             // 'redirect_url' : 'http://localhost:9002',
+//           },
+//           json : true,
+//         }
+//         request.post(authOptions, (err, response, body) => {
+//           console.log(response, body);
+//         })
+//       }
+//       break
+//     }
+//   }
+//   console.log(new Date().toLocaleString(), '스케줄러 작동')
+// })
 
 module.exports = app;
